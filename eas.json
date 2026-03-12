@@ -13,13 +13,15 @@
       "android": {
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease"
-      }
+      },
+      "node": "18.18.0"
     },
     "production": {
       "android": {
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease"
-      }
+      },
+      "node": "18.18.0"
     }
   },
   "submit": {
