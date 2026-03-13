@@ -4,17 +4,12 @@
     "slug": "simas-app",
     "version": "3.4.2",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "backgroundColor": "#6c5ce7",
       "resizeMode": "contain"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#6c5ce7"
-      },
       "package": "com.simas.mobile",
       "versionCode": 1,
       "permissions": [
