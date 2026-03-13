@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef, useCallback, useMemo, memo, createC
 import {
   StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput,
   ActivityIndicator, Alert, Modal, StatusBar, ScrollView, Linking,
-  Animated, KeyboardAvoidingView, Platform, SafeAreaView, Dimensions,
+  Animated, KeyboardAvoidingView, Platform, Dimensions,
   RefreshControl, BackHandler, ToastAndroid, Easing, InteractionManager
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -1988,10 +1989,11 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
   // ★★★ JSX RETURN ★★★
   // ================================================================
 
-  return (
-    <ThemeContext.Provider value={T}>
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor={COLORS.secondary} />
+    return (
+    <SafeAreaProvider>
+      <ThemeContext.Provider value={T}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="light-content" backgroundColor={COLORS.secondary} />
 
         {view !== 'home' && (
           <LinearGradient colors={COLORS.gradientPrimary} style={styles.header}>
@@ -3126,8 +3128,9 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
               <Text style={{ color: T.text, marginTop: 12, fontWeight: '600' }}>{exportStatus || 'Memproses...'}</Text>
             </View>
           </View>
-        )}
-      </SafeAreaView>
-    </ThemeContext.Provider>
+         )}
+        </SafeAreaView>
+      </ThemeContext.Provider>
+    </SafeAreaProvider>
   );
 }

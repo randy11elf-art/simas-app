@@ -3,6 +3,7 @@
     "owner": "randy11",
     "name": "SIMAS",
     "slug": "simas-app",
+    "newArchEnabled": false,
     "version": "3.4.2",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
