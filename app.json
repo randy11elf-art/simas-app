@@ -18,8 +18,17 @@
         "INTERNET"
       ]
     },
-    "plugins": [
-      "expo-screen-orientation"
+        "plugins": [
+      "expo-screen-orientation",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "newArchEnabled": false,
+            "bridgeless": false
+          }
+        }
+      ]
     ],
     "extra": {
       "eas": {
