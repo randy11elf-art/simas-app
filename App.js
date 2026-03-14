@@ -76,8 +76,9 @@ const YEARS = Object.freeze(
   Array.from({ length: 15 }, (_, i) => (new Date().getFullYear() - 5 + i).toString())
 );
 
-const { width } = Dimensions.get('window');
-const TAB_WIDTH = (width - 40) / 5;
+const windowDim = Dimensions.get('window') || { width: 360, height: 640 };
+const width = windowDim.width > 0 ? windowDim.width : 360;
+const TAB_WIDTH = Math.max((width - 40) / 5, 50);
 
 const NAV_ITEMS = Object.freeze([
   { key: 'home', icon: 'home', label: 'Home' },
