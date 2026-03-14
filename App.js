@@ -13,6 +13,21 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false, err: '' }; }
+  static getDerivedStateFromError(error) { return { hasError: true, err: error.toString() }; }
+  render() {
+    if (this.state.hasError) return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: '#d63031' }}>
+        <Text style={{ fontSize: 24, color: 'white', fontWeight: 'bold', marginBottom: 10 }}>⚠️ Aplikasi Error</Text>
+        <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 }}>{this.state.err}</Text>
+        <Text style={{ color: 'white', marginTop: 30, fontSize: 11 }}>Tolong screenshot layar ini!</Text>
+      </View>
+    );
+    return this.props.children;
+  }
+}
+
 // ★ GANTI DENGAN URL DEPLOYMENT BARU SETELAH DEPLOY GAS ★
 const API_URL = "https://script.google.com/macros/s/AKfycbwRC-ejiUpm-Xz3FK7gjwVkp2WgTOtfyVl1YtD59czyx9zm_6V_7CGnAndYvMBUum6T9Q/exec";
 
@@ -1176,12 +1191,6 @@ export default function App() {
     return () => { mountedRef.current = false; };
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      try { await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP); }
-      catch (e) { console.log('Orientation lock failed:', e.message); }
-    })();
-  }, []);
 
   useEffect(() => {
     if (loading) {
@@ -1991,11 +2000,11 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
   // ================================================================
 
     return (
-    <SafeAreaProvider>
-      <ThemeContext.Provider value={T}>
-        <SafeAreaView style={styles.container}>
-          <StatusBar barStyle="light-content" backgroundColor={COLORS.secondary} />
-
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <ThemeContext.Provider value={T}>
+          <SafeAreaView style={styles.container}>
+            <StatusBar barStyle="light-content" backgroundColor={COLORS.secondary} />
         {view !== 'home' && (
           <LinearGradient colors={COLORS.gradientPrimary} style={styles.header}>
             <TouchableOpacity onPress={() => setSidebar(true)}>
@@ -3131,7 +3140,8 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
           </View>
          )}
         </SafeAreaView>
-      </ThemeContext.Provider>
-    </SafeAreaProvider>
+        </ThemeContext.Provider>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 }
