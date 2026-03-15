@@ -12,6 +12,18 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+
+// Pengaturan agar notif berbunyi dan muncul dari atas layar
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { hasError: false, err: '' }; }
@@ -1076,6 +1088,40 @@ const useSortable = (defaultField = null, defaultOrder = 'asc') => {
   return { sortField, sortOrder, toggleSort };
 };
 
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      console.log('Izin notifikasi ditolak!');
+      return null;
+    }
+    try {
+      const projectId = Constants.expoConfig?.extra?.eas?.projectId || "51018d95-a854-4200-ba5b-74ee7db201f9";
+      token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+    } catch (e) {
+      console.log("Gagal ambil token:", e);
+    }
+  } else {
+    console.log('Harus pakai HP asli untuk Push Notif');
+  }
+  return token;
+}
+
 // ================================================================
 // MAIN APP
 // ================================================================
@@ -1210,10 +1256,15 @@ export default function App() {
   const handleLogin = useCallback(async (username, pin) => {
     setLoading(true);
     try {
+      // 1. Ambil Token HP sebelum nembak ke GAS
+      const pushToken = await registerForPushNotificationsAsync();
+      
+      // 2. Kirim Username, PIN, dan Token ke GAS
       const res = await fetchWithTimeout(API_URL, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'login', data: { username, pin } })
+        body: JSON.stringify({ action: 'login', data: { username, pin, pushToken: pushToken || "" } })
       });
+      
       const json = await res.json();
       if (json.status === 'success') {
         setCurrentUser(json.user); setIsLoggedIn(true);
