@@ -2690,7 +2690,7 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
         <Modal visible={sidebar} transparent animationType="fade">
           <View style={styles.sidebarOverlay}>
             <View style={styles.sidebarContent}>
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
                 <View style={{ alignItems: 'center', marginBottom: 25 }}>
                   <LinearGradient colors={COLORS.gradientSecondary} style={{ width: 60, height: 60, borderRadius: 30, justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
                     <MaterialCommunityIcons name="hospital-building" size={30} color="white" />
