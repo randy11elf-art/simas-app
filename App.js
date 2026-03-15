@@ -2029,7 +2029,7 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
     navBarContainer: { position: 'absolute', bottom: 25, left: 15, right: 15, height: 70, borderRadius: 35, backgroundColor: T.bottomBar, elevation: 20, flexDirection: 'row', alignItems: 'center' },
     activeBall: { position: 'absolute', top: -28, width: 64, height: 64, borderRadius: 32, backgroundColor: COLORS.primary, elevation: 8, borderWidth: 5, borderColor: T.bg, justifyContent: 'center', alignItems: 'center' },
     sidebarOverlay: { flex: 1, flexDirection: 'row' },
-    sidebarContent: { width: 280, height: '100%', backgroundColor: COLORS.bgApp, paddingTop: 50, paddingHorizontal: 20 },
+    sidebarContent: { flex: 1, width: 280, backgroundColor: COLORS.bgApp, paddingTop: 50, paddingBottom: 40, paddingHorizontal: 20 },
     sideItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 16, borderBottomWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
   }), [T]);
 
@@ -2690,7 +2690,7 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
         <Modal visible={sidebar} transparent animationType="fade">
           <View style={styles.sidebarOverlay}>
             <View style={styles.sidebarContent}>
-              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
+              <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 50 }} showsVerticalScrollIndicator={false}>
                 <View style={{ alignItems: 'center', marginBottom: 25 }}>
                   <LinearGradient colors={COLORS.gradientSecondary} style={{ width: 60, height: 60, borderRadius: 30, justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
                     <MaterialCommunityIcons name="hospital-building" size={30} color="white" />
