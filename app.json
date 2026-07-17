@@ -14,12 +14,13 @@
     },
     "android": {
       "package": "com.simas.mobile",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "permissions": [
         "INTERNET"
       ]
     },
-        "plugins": [
+    "plugins": [
       "expo-screen-orientation",
       [
         "expo-build-properties",

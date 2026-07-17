@@ -45,9 +45,22 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwRC-ejiUpm-Xz3FK7gjwVk
 
 const SPREADSHEET_ID = "1nHqZCFnAcPZh7dxJxCGILxwIE8nhDCdy7iaA67wvNwg";
 
-// ★ FIXED: ID sudah diisi, SHEET_URL pakai constant
-const HANDOVER_SHEET_ID = "1hHvT6sZMkqT5HxJI3omDAbor5l2j8wZeVrrJjmdxszQ";
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/1hHvT6sZMkqT5HxJI3omDAbor5l2j8wZeVrrJjmdxszQ/edit`;
+// --- FUNGSI PINTAR BUKA SPREADSHEET OTOMATIS DARI GAS ---
+const bukaSpreadsheetOtomatis = async () => {
+  try {
+    ToastAndroid.show("Mengambil link terbaru dari Server...", ToastAndroid.SHORT);
+    let respon = await fetch(API_URL + "?action=getLinkHandover");
+    let data = await respon.json();
+    if (data.status === "success" && data.link) {
+      Linking.openURL(data.link);
+    } else {
+      Alert.alert("Gagal", "Tidak dapat mengambil link dari server.");
+    }
+  } catch (error) {
+    Alert.alert("Error", "Gagal terhubung ke server. Periksa internet Anda.");
+  }
+};
+// --------------------------------------------------------
 
 const APP_VERSION = 'v3.4.2';
 const STERIL_DAYS = 30;
@@ -1107,17 +1120,19 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      console.log('Izin notifikasi ditolak!');
+      Alert.alert("Perhatian", "Izin notifikasi ditolak oleh HP!");
       return null;
     }
     try {
-      const projectId = Constants.expoConfig?.extra?.eas?.projectId || "51018d95-a854-4200-ba5b-74ee7db201f9";
+      // Perbaikan cara panggil Project ID untuk Mesin EAS Baru
+      const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId ?? "51018d95-a854-4200-ba5b-74ee7db201f9";
       token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
     } catch (e) {
-      console.log("Gagal ambil token:", e);
+      // Memunculkan pesan error di layar HP agar tidak sembunyi-sembunyi
+      Alert.alert("Gagal Membuat Token", e.message || "Cek koneksi internet atau Project ID");
     }
   } else {
-    console.log('Harus pakai HP asli untuk Push Notif');
+    Alert.alert("Perhatian", "Push Notif hanya jalan di HP asli, bukan Emulator");
   }
   return token;
 }
@@ -2030,7 +2045,7 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
     activeBall: { position: 'absolute', top: -28, width: 64, height: 64, borderRadius: 32, backgroundColor: COLORS.primary, elevation: 8, borderWidth: 5, borderColor: T.bg, justifyContent: 'center', alignItems: 'center' },
     sidebarOverlay: { flex: 1, flexDirection: 'row' },
     sidebarContent: { flex: 1, width: 280, backgroundColor: COLORS.bgApp, paddingTop: 50, paddingBottom: 40, paddingHorizontal: 20 },
-    sideItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 16, borderBottomWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
+    sideItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 6, borderBottomWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
   }), [T]);
 
   const getHeaderTitle = () => {
@@ -2445,7 +2460,7 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
                     <TouchableOpacity onPress={() => setHoShowPreview(true)} style={{ padding: 8, backgroundColor: COLORS.primary + '15', borderRadius: 10, marginRight: 8 }}>
                       <MaterialCommunityIcons name="table-eye" size={20} color={COLORS.primary} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => Linking.openURL(SHEET_URL)} style={{ padding: 8, backgroundColor: COLORS.success + '15', borderRadius: 10 }}>
+                    <TouchableOpacity onPress={bukaSpreadsheetOtomatis} style={{ padding: 8, backgroundColor: COLORS.success + '15', borderRadius: 10 }}>                      
                       <MaterialCommunityIcons name="google-spreadsheet" size={20} color={COLORS.success} />
                     </TouchableOpacity>
                   </View>
@@ -2656,7 +2671,7 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
                       <TouchableOpacity onPress={() => setHoShowPreview(true)} style={{ flex: 1, padding: 14, borderRadius: 12, alignItems: 'center', borderWidth: 1, borderColor: COLORS.primary, flexDirection: 'row', justifyContent: 'center', marginRight: 8 }}>
                         <MaterialCommunityIcons name="table-eye" size={18} color={COLORS.primary} style={{ marginRight: 8 }} /><Text style={{ color: COLORS.primary, fontWeight: '600', fontSize: 13 }}>Preview Sheet</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => Linking.openURL(SHEET_URL)} style={{ flex: 1, padding: 14, borderRadius: 12, alignItems: 'center', borderWidth: 1, borderColor: COLORS.success, flexDirection: 'row', justifyContent: 'center' }}>
+                      <TouchableOpacity onPress={bukaSpreadsheetOtomatis} style={{ flex: 1, padding: 14, borderRadius: 12, alignItems: 'center', borderWidth: 1, borderColor: COLORS.success, flexDirection: 'row', justifyContent: 'center' }}>                        
                         <MaterialCommunityIcons name="google-spreadsheet" size={18} color={COLORS.success} style={{ marginRight: 8 }} /><Text style={{ color: COLORS.success, fontWeight: '600', fontSize: 13 }}>Google Sheets</Text>
                       </TouchableOpacity>
                     </View>
@@ -2730,9 +2745,12 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
                   <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: COLORS.danger + '20', justifyContent: 'center', alignItems: 'center' }}><MaterialCommunityIcons name="logout" size={20} color={COLORS.danger} /></View>
                   <Text style={{ marginLeft: 12, color: COLORS.danger, fontWeight: 'bold' }}>Logout</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setSidebar(false)} style={{ marginTop: 15, alignSelf: 'center', backgroundColor: COLORS.danger + '20', paddingHorizontal: 25, paddingVertical: 10, borderRadius: 20 }}>
+
+                {/* Tambahan marginBottom: 60 agar tombol tidak tenggelam di bawah layar Android */}
+                <TouchableOpacity onPress={() => setSidebar(false)} style={{ marginTop: 15, marginBottom: 60, alignSelf: 'center', backgroundColor: COLORS.danger + '20', paddingHorizontal: 25, paddingVertical: 10, borderRadius: 20 }}>
                   <Text style={{ color: COLORS.danger, fontWeight: 'bold' }}>✕ Tutup</Text>
                 </TouchableOpacity>
+                
               </ScrollView>
             </View>
             <TouchableOpacity style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }} onPress={() => setSidebar(false)} activeOpacity={1} />
@@ -3160,7 +3178,7 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
                 <TouchableOpacity style={{ flex: 1, padding: 14, borderRadius: 12, alignItems: 'center', backgroundColor: COLORS.secondary, marginRight: 8 }} onPress={() => setHoShowPreview(false)}>
                   <Text style={{ color: 'white', fontWeight: 'bold' }}>TUTUP</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flex: 1, padding: 14, borderRadius: 12, alignItems: 'center', backgroundColor: COLORS.success, flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setHoShowPreview(false); Linking.openURL(SHEET_URL); }}>
+                 <TouchableOpacity style={{ flex: 1, padding: 14, borderRadius: 12, alignItems: 'center', backgroundColor: COLORS.success, flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setHoShowPreview(false); bukaSpreadsheetOtomatis(); }}> 
                   <MaterialCommunityIcons name="google-spreadsheet" size={16} color="white" style={{ marginRight: 6 }} />
                   <Text style={{ color: 'white', fontWeight: 'bold' }}>Buka Sheets</Text>
                 </TouchableOpacity>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "277809954453",
+    "project_id": "simas-mobile-2aa2b",
+    "storage_bucket": "simas-mobile-2aa2b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277809954453:android:be37694f1a0dacaee0e59c",
+        "android_client_info": {
+          "package_name": "com.simas.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtxjT47LXVXJYKCTQrTids_b0TYb4ZCw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
