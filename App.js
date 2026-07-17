@@ -1125,7 +1125,7 @@ async function registerForPushNotificationsAsync() {
     }
     try {
       // Perbaikan cara panggil Project ID untuk Mesin EAS Baru
-      const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId ?? "51018d95-a854-4200-ba5b-74ee7db201f9";
+      const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId ?? "3a1d6dee-fb8a-4750-9286-8ce55d03be19";
       token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
     } catch (e) {
       // Memunculkan pesan error di layar HP agar tidak sembunyi-sembunyi
