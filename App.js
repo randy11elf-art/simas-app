@@ -2235,8 +2235,9 @@ ${(data.topPetugas || []).length > 0 ? `<div class="section"><h2>👤 Petugas Pa
                     </TouchableOpacity>
                   </View>
                 </View>
-
-                {isEditMode && isAdmin && (
+                                
+                                {/* --- MUNCULKAN TANGGAL PAKAI UNTUK SEMUA USER SAAT MODE EDIT --- */}
+                {isEditMode && (
                   <View style={{ backgroundColor: mode === 'dark' ? '#1a365d' : '#e3f2fd', padding: 15, borderRadius: 12, marginBottom: 15, borderLeftWidth: 4, borderLeftColor: COLORS.statKotor }}>
                     <Text style={{ color: mode === 'dark' ? '#fff' : '#1a365d', fontWeight: 'bold', marginBottom: 10 }}>📦 Pemakaian (KELUAR)</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
