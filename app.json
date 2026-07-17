@@ -12,16 +12,13 @@
       "backgroundColor": "#6c5ce7",
       "resizeMode": "contain"
     },
-        "android": {
+    "android": {
       "package": "com.simas.mobile",
       "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "permissions": [
         "INTERNET"
-      ],
-      "notification": {
-        "icon": "./assets/notif-icon.png"
-      }
+      ]
     },
     "plugins": [
       "expo-screen-orientation",
@@ -32,6 +29,12 @@
             "newArchEnabled": false,
             "bridgeless": false
           }
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notif-icon.png"
         }
       ]
     ],
